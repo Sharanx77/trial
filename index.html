@@ -7,29 +7,30 @@
     <script src="https://cdn.tailwindcss.com"></script>
     
     <style>
-      /* --- THE FIXES --- */
+      /* --- MANDATORY CSS FIXES --- */
       
-      /* 1. Stop Tailwind from squishing the camera video feed */
+      /* Stop Tailwind from squishing the AR camera feed */
       video {
         max-width: none !important;
       }
 
-      /* 2. Ensure the A-Frame canvas takes up the whole screen */
+      /* Ensure the 3D canvas fills the entire screen */
       .a-canvas {
         width: 100% !important;
         height: 100% !important;
       }
 
-      /* 3. Lock the UI to the bottom of the screen above everything */
+      /* Lock the UI to the bottom of the screen, floating above the camera */
       .ui-layer {
-        position: fixed; /* Fixed keeps it on the screen even on mobile */
-        z-index: 9999;   /* Forces it to the very front */
+        position: fixed; 
+        z-index: 9999;   
         bottom: 0;
         left: 0;
         width: 100%;
-        pointer-events: none; 
+        pointer-events: none; /* Lets you tap through the empty space */
       }
       
+      /* Makes the buttons actually clickable */
       .interactive-btn {
         pointer-events: auto; 
       }
@@ -37,18 +38,21 @@
   </head>
   <body style="margin: 0; overflow: hidden; background-color: black;">
 
-    <a-scene embedded arjs="sourceType: webcam; debugUIEnabled: false;">
+    <a-scene embedded arjs="sourceType: webcam; debugUIEnabled: false; trackingMethod: best;">
+      
       <a-assets>
         <a-asset-item id="food-model" src="https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/master/2.0/Avocado/glTF/Avocado.gltf"></a-asset-item>
       </a-assets>
 
-      <a-marker preset="hiro">
+      <a-marker type="pattern" url="pattern-marker.patt">
+        
         <a-entity 
           gltf-model="#food-model" 
           scale="10 10 10" 
           position="0 0 0" 
           animation="property: rotation; to: 0 360 0; loop: true; dur: 8000; easing: linear">
         </a-entity>
+        
       </a-marker>
 
       <a-entity camera></a-entity>
@@ -56,6 +60,7 @@
 
     <div class="ui-layer p-4 pb-8">
       <div class="bg-white/30 backdrop-blur-md border border-white/40 p-5 rounded-3xl shadow-2xl mx-2">
+        
         <div class="flex justify-between items-start">
           <div>
             <h1 class="text-2xl font-extrabold text-gray-900 drop-shadow-md">Butter Chicken</h1>
@@ -74,6 +79,7 @@
             ⚙️ Customize
           </button>
         </div>
+        
       </div>
     </div>
 
