@@ -1,15 +1,67 @@
 <!DOCTYPE html>
 <html>
   <head>
+    <title>AR Smart Menu</title>
     <script src="https://aframe.io/releases/1.3.0/aframe.min.js"></script>
     <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <style>
+      /* This keeps your UI on top of the camera feed */
+      .ui-layer {
+        position: absolute;
+        z-index: 100;
+        bottom: 0;
+        width: 100%;
+        pointer-events: none; /* Lets you tap the 3D model behind the UI */
+      }
+      .interactive-btn {
+        pointer-events: auto; /* Makes the buttons clickable */
+      }
+    </style>
   </head>
   <body style="margin: 0; overflow: hidden;">
+
     <a-scene embedded arjs="sourceType: webcam; debugUIEnabled: false;">
+      
+      <a-assets>
+        <a-asset-item id="food-model" src="https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/master/2.0/Avocado/glTF/Avocado.gltf"></a-asset-item>
+      </a-assets>
+
       <a-marker preset="hiro">
-        <a-box position="0 0.5 0" color="red" animation="property: rotation; to: 0 360 0; loop: true; dur: 3000"></a-box>
+        <a-entity 
+          gltf-model="#food-model" 
+          scale="10 10 10" 
+          position="0 0 0" 
+          animation="property: rotation; to: 0 360 0; loop: true; dur: 8000; easing: linear">
+        </a-entity>
       </a-marker>
+
       <a-entity camera></a-entity>
     </a-scene>
+
+    <div class="ui-layer p-6 pb-10">
+      <div class="bg-white/20 backdrop-blur-lg border border-white/30 p-6 rounded-3xl shadow-2xl">
+        <div class="flex justify-between items-start">
+          <div>
+            <h1 class="text-3xl font-extrabold text-gray-900 drop-shadow-md">Butter Chicken</h1>
+            <p class="text-gray-900 font-bold mt-1 drop-shadow-md">₹350 • 830 kcal</p>
+          </div>
+          <span class="bg-red-500/90 text-white text-xs font-bold px-3 py-1 rounded-full shadow-md">Heavy</span>
+        </div>
+        
+        <p class="text-sm text-gray-800 mt-3 font-medium">Rich, creamy tomato curry with tender chicken. Perfectly spiced.</p>
+        
+        <div class="mt-5 flex gap-3 interactive-btn">
+          <button class="flex-1 bg-orange-500 hover:bg-orange-600 text-white font-bold py-3 px-4 rounded-xl shadow-lg transition transform hover:scale-105">
+            Add to Cart
+          </button>
+          <button class="bg-white/80 hover:bg-white text-gray-900 font-bold py-3 px-4 rounded-xl shadow-lg transition">
+            ⚙️ Customize
+          </button>
+        </div>
+      </div>
+    </div>
+
   </body>
 </html>
