@@ -1,129 +1,124 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>AR Smart Menu: AI X-Ray Vision</title>
+    <title>AR Smart Menu</title>
     <script src="https://aframe.io/releases/1.3.0/aframe.min.js"></script>
     <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script>
-    <script src="https://unpkg.com/aframe-look-at-component@0.8.0/dist/aframe-look-at-component.min.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
     
     <style>
       video { max-width: none !important; }
-      .a-canvas { width: 100% !important; height: 100% !important; }
       .ui-layer {
         position: fixed; 
         z-index: 9999;   
-        bottom: 0;
+        bottom: 20px;
         left: 0;
         width: 100%;
         pointer-events: none; 
       }
       .interactive-btn { pointer-events: auto; }
+      /* Welcome Screen Overlay */
+      #welcome-screen {
+        position: fixed;
+        top: 0; left: 0; width: 100%; height: 100%;
+        background: rgba(0,0,0,0.9);
+        z-index: 10000;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        color: white;
+        text-align: center;
+      }
     </style>
   </head>
   <body style="margin: 0; overflow: hidden; background-color: black;">
 
+    <!-- 1. Welcome Note Overlay -->
+    <div id="welcome-screen" class="p-6">
+      <h1 class="text-4xl font-black mb-4 text-orange-500">WELCOME</h1>
+      <p class="text-lg mb-8 text-gray-300">Experience our menu in Augmented Reality. Point your camera at the marker after clicking next.</p>
+      <button onclick="startApp()" class="bg-orange-500 text-white px-12 py-4 rounded-full font-bold text-xl shadow-lg active:scale-95 transition">
+        NEXT
+      </button>
+    </div>
+
     <a-scene embedded arjs="sourceType: webcam; debugUIEnabled: false;">
       <a-assets>
-        <a-asset-item id="avocado-asset" src="https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/master/2.0/Avocado/glTF/Avocado.gltf"></a-asset-item>
+        <!-- Using a Waffle-like model or placeholder -->
+        <a-asset-item id="food-model" src="https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/master/2.0/Avocado/glTF/Avocado.gltf"></a-asset-item>
       </a-assets>
 
       <a-marker preset="hiro">
-        <a-entity id="menu-model" gltf-model="#avocado-asset" scale="15 15 15" position="0 0 0"></a-entity>
+        <!-- The Model -->
         
-        <a-entity id="xray-labels" visible="false">
-          
-            <a-ring color="#00FFFF" radius-inner="1.2" radius-outer="1.3" rotation="-90 0 0" position="0 0 0" opacity="0.7"
-                    animation="property: position; to: 0 1.5 0; dir: alternate; dur: 1500; loop: true; easing: easeInOutSine">
-            </a-ring>
-
-            <a-entity position="1.2 1.5 0" look-at="[camera]">
-              <a-plane color="#000000" opacity="0.6" width="2" height="0.4" position="0 0 -0.01"></a-plane>
-              <a-text value="High in Healthy Fats" color="#00FFFF" align="center" width="4" position="0 0 0"></a-text>
-              <a-entity line="start: -1 0 0; end: -1.5 -0.8 0; color: #00FFFF"></a-entity>
-            </a-entity>
-
-            <a-entity position="-1.2 0.8 0" look-at="[camera]">
-              <a-plane color="#000000" opacity="0.6" width="1.8" height="0.4" position="0 0 -0.01"></a-plane>
-              <a-text value="Organic & Fresh" color="#00FFFF" align="center" width="4" position="0 0 0"></a-text>
-              <a-entity line="start: 0.9 0 0; end: 1.5 0.5 0; color: #00FFFF"></a-entity>
-            </a-entity>
-
-        </a-entity>
+        
       </a-marker>
 
-      <a-entity camera></a-entity>
+      
     </a-scene>
 
-    <div class="ui-layer p-4 pb-8">
-      <div class="bg-white/30 backdrop-blur-md border border-white/40 p-5 rounded-3xl shadow-2xl mx-2">
-        <div class="flex justify-between items-start">
-          <div>
-            <h1 class="text-2xl font-extrabold text-white drop-shadow-md">AR Avocado</h1>
-            <p class="text-white font-bold mt-1 drop-shadow-md">₹350 • 160 kcal</p>
-          </div>
-          <span class="bg-green-500 text-white text-xs font-bold px-3 py-1 rounded-full shadow-md">Healthy</span>
+    <!-- 2. Main Menu UI -->
+    <div class="ui-layer px-4">
+      <div class="bg-black/70 backdrop-blur-lg border border-white/20 p-5 rounded-3xl shadow-2xl">
+        <div class="flex justify-between items-center mb-4">
+          <h2 id="item-name" class="text-xl font-bold text-white">Galaxy Waffle</h2>
+          <span class="text-orange-400 font-bold">₹280</span>
         </div>
         
-        <div class="mt-4 flex gap-3 interactive-btn">
-          <button onclick="alert('Added to cart!')" class="flex-1 bg-orange-500 hover:bg-orange-600 text-white font-bold py-3 px-4 rounded-xl shadow-lg transition transform active:scale-95">
-            Add to Cart
-          </button>
-          <button id="customize-btn" class="bg-white/80 hover:bg-white text-gray-900 font-bold py-3 px-4 rounded-xl shadow-lg transition active:scale-95">
-            ⚙️ X-Ray Mode
-          </button>
+        <!-- Category Toggles -->
+        <div class="flex gap-2 mb-4 interactive-btn overflow-x-auto pb-2">
+          <button class="bg-orange-500 text-white px-4 py-2 rounded-lg text-sm font-bold min-w-fit">Waffles</button>
+          <button class="bg-white/10 text-white px-4 py-2 rounded-lg text-sm font-bold min-w-fit">Ice Cream</button>
+          <button class="bg-white/10 text-white px-4 py-2 rounded-lg text-sm font-bold min-w-fit">Drinks</button>
         </div>
+
+        <button onclick="orderFood()" class="interactive-btn w-full bg-green-500 hover:bg-green-600 text-white font-black py-4 rounded-2xl shadow-xl transition active:scale-95">
+          ADD TO CART & ORDER
+        </button>
       </div>
     </div>
 
     <script>
-      const scene = document.querySelector('a-scene');
       const model = document.querySelector('#menu-model');
-      const xray = document.querySelector('#xray-labels');
-      const custBtn = document.querySelector('#customize-btn');
+      const welcome = document.querySelector('#welcome-screen');
       
+      function startApp() {
+        welcome.style.display = 'none';
+      }
+
+      function orderFood() {
+        const item = document.getElementById('item-name').innerText;
+        alert("Order for " + item + " sent to backend!");
+        // Here you would add your fetch() call to your Node.js/Firebase backend
+      }
+
+      // --- FIXED 360 ROTATION LOGIC ---
       let isDragging = false;
-      let startX = 0;
-      let currentRotation = 0;
-      const sensitivity = 0.5;
+      let previousMouseX = 0;
 
-      // --- ROTATION LOGIC ---
-      scene.addEventListener('touchstart', (e) => {
-          isDragging = true;
-          startX = e.touches[0].pageX;
+      window.addEventListener('touchstart', (e) => {
+        isDragging = true;
+        previousMouseX = e.touches[0].clientX;
       });
 
-      scene.addEventListener('touchmove', (e) => {
-          if (isDragging && model) {
-              let currentX = e.touches[0].pageX;
-              let deltaX = currentX - startX;
-              currentRotation += deltaX * sensitivity;
-              model.setAttribute('rotation', `0 ${currentRotation} 0`);
-              startX = currentX;
-          }
-      });
-
-      scene.addEventListener('touchend', () => { isDragging = false; });
-
-      // --- X-RAY UI TOGGLE INTERACTION ---
-      custBtn.addEventListener('click', () => {
-        const isVisible = xray.getAttribute('visible');
-        
-        // Toggle 3D elements
-        xray.setAttribute('visible', !isVisible);
-        
-        // Update UI Button to reflect state
-        if (!isVisible) {
-            // Turning ON
-            custBtn.innerHTML = '❌ Close X-Ray';
-            custBtn.classList.remove('bg-white/80', 'text-gray-900');
-            custBtn.classList.add('bg-cyan-500', 'text-white', 'hover:bg-cyan-600', 'border-cyan-400', 'border');
-        } else {
-            // Turning OFF
-            custBtn.innerHTML = '⚙️ X-Ray Mode';
-            custBtn.classList.add('bg-white/80', 'text-gray-900');
-            custBtn.classList.remove('bg-cyan-500', 'text-white', 'hover:bg-cyan-600', 'border-cyan-400', 'border');
+      window.addEventListener('touchmove', (e) => {
+        if (isDragging && model) {
+          const deltaX = e.touches[0].clientX - previousMouseX;
+          
+          // Get current rotation
+          let rotation = model.getAttribute('rotation');
+          
+          // Update Y rotation (360 degrees)
+          rotation.y += deltaX * 0.5; 
+          
+          model.setAttribute('rotation', rotation);
+          previousMouseX = e.touches[0].clientX;
         }
+      });
+
+      window.addEventListener('touchend', () => {
+        isDragging = false;
       });
     </script>
   </body>
