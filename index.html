@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>AR Smart Menu: Fixed & Interactive</title>
+    <title>AR Smart Menu: AI X-Ray Vision</title>
     <script src="https://aframe.io/releases/1.3.0/aframe.min.js"></script>
     <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script>
+    <script src="https://unpkg.com/aframe-look-at-component@0.8.0/dist/aframe-look-at-component.min.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
     
     <style>
@@ -29,17 +30,26 @@
 
       <a-marker preset="hiro">
         <a-entity id="menu-model" gltf-model="#avocado-asset" scale="15 15 15" position="0 0 0"></a-entity>
-      
+        
         <a-entity id="xray-labels" visible="false">
-            <a-entity line="start: 0 0.5 0; end: 0.5 1 0; color: white" 
-                      text="value: High in Healthy Fats; align: center; width: 4"
-                      position="0.8 1.2 0">
+          
+            <a-ring color="#00FFFF" radius-inner="1.2" radius-outer="1.3" rotation="-90 0 0" position="0 0 0" opacity="0.7"
+                    animation="property: position; to: 0 1.5 0; dir: alternate; dur: 1500; loop: true; easing: easeInOutSine">
+            </a-ring>
+
+            <a-entity position="1.2 1.5 0" look-at="[camera]">
+              <a-plane color="#000000" opacity="0.6" width="2" height="0.4" position="0 0 -0.01"></a-plane>
+              <a-text value="High in Healthy Fats" color="#00FFFF" align="center" width="4" position="0 0 0"></a-text>
+              <a-entity line="start: -1 0 0; end: -1.5 -0.8 0; color: #00FFFF"></a-entity>
             </a-entity>
-            <a-entity line="start: 0 0.2 0; end: -0.5 0.8 0; color: white" 
-                      text="value: Organic & Fresh; align: center; width: 4"
-                      position="-0.8 1.0 0">
+
+            <a-entity position="-1.2 0.8 0" look-at="[camera]">
+              <a-plane color="#000000" opacity="0.6" width="1.8" height="0.4" position="0 0 -0.01"></a-plane>
+              <a-text value="Organic & Fresh" color="#00FFFF" align="center" width="4" position="0 0 0"></a-text>
+              <a-entity line="start: 0.9 0 0; end: 1.5 0.5 0; color: #00FFFF"></a-entity>
             </a-entity>
-          </a-entity>
+
+        </a-entity>
       </a-marker>
 
       <a-entity camera></a-entity>
@@ -60,7 +70,7 @@
             Add to Cart
           </button>
           <button id="customize-btn" class="bg-white/80 hover:bg-white text-gray-900 font-bold py-3 px-4 rounded-xl shadow-lg transition active:scale-95">
-            ⚙️ X-Ray
+            ⚙️ X-Ray Mode
           </button>
         </div>
       </div>
@@ -95,11 +105,25 @@
 
       scene.addEventListener('touchend', () => { isDragging = false; });
 
-      // --- UI INTERACTION ---
+      // --- X-RAY UI TOGGLE INTERACTION ---
       custBtn.addEventListener('click', () => {
         const isVisible = xray.getAttribute('visible');
+        
+        // Toggle 3D elements
         xray.setAttribute('visible', !isVisible);
-        custBtn.classList.toggle('bg-orange-200');
+        
+        // Update UI Button to reflect state
+        if (!isVisible) {
+            // Turning ON
+            custBtn.innerHTML = '❌ Close X-Ray';
+            custBtn.classList.remove('bg-white/80', 'text-gray-900');
+            custBtn.classList.add('bg-cyan-500', 'text-white', 'hover:bg-cyan-600', 'border-cyan-400', 'border');
+        } else {
+            // Turning OFF
+            custBtn.innerHTML = '⚙️ X-Ray Mode';
+            custBtn.classList.add('bg-white/80', 'text-gray-900');
+            custBtn.classList.remove('bg-cyan-500', 'text-white', 'hover:bg-cyan-600', 'border-cyan-400', 'border');
+        }
       });
     </script>
   </body>
